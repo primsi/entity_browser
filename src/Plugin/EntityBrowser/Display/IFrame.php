@@ -55,6 +55,13 @@ class IFrame extends DisplayBase implements DisplayRouterInterface {
   protected $request;
 
   /**
+   * Current selection.
+   *
+   * @var array
+   */
+  protected $currentSelection = array();
+
+  /**
    * Constructs display plugin.
    *
    * @param array $configuration
@@ -97,6 +104,21 @@ class IFrame extends DisplayBase implements DisplayRouterInterface {
   /**
    * {@inheritdoc}
    */
+  public function setCurrentSelection(array $current_selection) {
+    $this->currentSelection += $current_selection;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCurrentSelection() {
+    return $this->currentSelection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function defaultConfiguration() {
     return array(
       'width' => 650,
@@ -113,6 +135,8 @@ class IFrame extends DisplayBase implements DisplayRouterInterface {
     $event = $this->eventDispatcher->dispatch(Events::REGISTER_JS_CALLBACKS, new RegisterJSCallbacks($this->configuration['entity_browser_id']));
     $uuid = $this->uuid->generate();
     $original_path = $this->request->getPathInfo();
+    $current_selection = $this->getCurrentSelection();
+
     return [
       '#theme_wrappers' => ['container'],
       'link' => [
@@ -135,6 +159,7 @@ class IFrame extends DisplayBase implements DisplayRouterInterface {
                     'query' => [
                       'uuid' => $uuid,
                       'original_path' => $original_path,
+                      'current_selection' => implode(',', $current_selection),
                     ]
                   ])->toString(),
                   'width' => $this->configuration['width'],

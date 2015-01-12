@@ -30,6 +30,9 @@ interface DisplayInterface extends PluginInspectionInterface, ConfigurablePlugin
    * with it. It will take care about displaying entity browser in one way or
    * another.
    *
+   * @param array $current_selection
+   *   Currently selected entities.
+   *
    * @return array
    *   An array suitable for drupal_render().
    */
@@ -47,4 +50,21 @@ interface DisplayInterface extends PluginInspectionInterface, ConfigurablePlugin
    */
   public function selectionCompleted(array $entities);
 
+  /**
+   * Set current selection.
+   *
+   * @param array $current_selection
+   *   An array of entity ids.
+   *
+   * @return $this
+   */
+  public function setCurrentSelection(array $current_selection);
+
+  /**
+   * Get current selection.
+   *
+   * @return array
+   *   An array of entity ids.
+   */
+  public function getCurrentSelection();
 }

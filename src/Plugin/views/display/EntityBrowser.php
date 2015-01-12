@@ -81,6 +81,7 @@ class EntityBrowser extends DisplayPluginBase {
    */
   protected function handleForm(&$render) {
     if (!empty($this->view->field['entity_browser_select'])) {
+      $form_element_selected = 0;
       $this->view->field['entity_browser_select']->viewsForm($render);
 
       $render['#post_render'][] = [$this, 'postRender'];
@@ -89,9 +90,10 @@ class EntityBrowser extends DisplayPluginBase {
         $form_element_row_id = $row_id;
 
         $substitutions[] = [
-          'placeholder' => '<!--form-item-entity_browser_select--' . $form_element_row_id . '-->',
+          'placeholder' => "<!--form-item-entity_browser_select--" . $form_element_row_id . "--" . $form_element_selected . "-->",
           'field_name' => 'entity_browser_select',
           'row_id' => $form_element_row_id,
+          'form_element_selected' => $form_element_selected,
         ];
       }
 
@@ -117,6 +119,7 @@ class EntityBrowser extends DisplayPluginBase {
     foreach ($element['#substitutions']['#value'] as $substitution) {
       $field_name = $substitution['field_name'];
       $row_id = $substitution['row_id'];
+      $selected = $substitution['form_element_selected'];
 
       $search[] = $substitution['placeholder'];
       $replace[] = isset($element[$field_name][$row_id]) ? drupal_render($element[$field_name][$row_id]) : '';
